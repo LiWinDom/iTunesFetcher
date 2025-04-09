@@ -12,7 +12,7 @@
     <Application.Styles>
         <FluentTheme />
         <Style Selector="Window">
-            <Setter Property="FontFamily" Value="Comfortaa"/>
+            <Setter Property="FontFamily" Value="avares://iTunesFetcher/Assets/Fonts/Comfortaa.ttf#Comfortaa"/>
         </Style>
     </Application.Styles>
 </Application>
