@@ -11,5 +11,8 @@
   
     <Application.Styles>
         <FluentTheme />
+        <Style Selector="Window">
+            <Setter Property="FontFamily" Value="Comfortaa"/>
+        </Style>
     </Application.Styles>
 </Application>

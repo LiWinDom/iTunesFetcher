@@ -3,11 +3,12 @@
         xmlns:vm="using:iTunesFetcher.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d" d:DesignWidth="960" d:DesignHeight="540"
         x:Class="iTunesFetcher.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="iTunesFetcher">
+        Title="iTunesFetcher"
+        MinWidth="960" MinHeight="540">
 
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
@@ -15,6 +16,63 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_Файл">
+                <MenuItem Header="_Выбрать папку..." Command="{Binding OpenFolderCommand}"/>
+                <Separator/>
+                <MenuItem Header="_Выход"/>
+            </MenuItem>
+        </Menu>
+        
+        <DockPanel DockPanel.Dock="Bottom">
+            <ProgressBar DockPanel.Dock="Right"
+                         Minimum="0" Maximum="{Binding TrackCount}"
+                         Value="{Binding CurrentTrack}"
+                         Margin="10" VerticalAlignment="Stretch"/>
+            <TextBlock DockPanel.Dock="Left"
+                       Text="{Binding StatusMessage}"
+                       Margin="10, 5, 10, 10" FontSize="12"/>
+        </DockPanel>
+
+        <Grid Margin="5" ColumnDefinitions="2*, 3*, 3*, 2*">
+            <Border Grid.Column="0" BorderBrush="Gray" BorderThickness="0, 0, 1, 0" Padding="5">
+                 <ListBox ItemsSource="{Binding TrackList}"
+                          SelectedItem="{Binding SelectedTrack, Mode=TwoWay}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid ColumnDefinitions="Auto, *">
+                                <Image Grid.Column="0"
+                                       Source="{Binding ArtworkData}"
+                                       VerticalAlignment="Stretch"  
+                                       Stretch="Uniform"           
+                                       Margin="0,0,5,0"
+                                       MaxWidth="48">
+                                </Image>
+
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center"> 
+                                    <TextBlock Text="{Binding Title}" TextTrimming="CharacterEllipsis"/>
+                                    <TextBlock Text="{Binding Album}" FontSize="12" Opacity="0.5" TextTrimming="CharacterEllipsis"/>
+                                    <TextBlock Text="{Binding Artist}" FontSize="12" FontFamily="Segoe UI" Opacity="0.5" TextTrimming="CharacterEllipsis"/>
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                 </ListBox>
+            </Border>
+            
+             <Border Grid.Column="1" BorderBrush="Gray" BorderThickness="0, 0, 1, 0" Padding="5">
+                 <TextBlock Text="Текущая информация (Колонка 2)" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+             </Border>
+            
+             <Border Grid.Column="2" BorderBrush="Gray" BorderThickness="0, 0, 1, 0" Padding="5">
+                 <TextBlock Text="Редактирование (Колонка 3)" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+             </Border>
+            
+             <Border Grid.Column="3" Padding="5">
+                 <TextBlock Text="Поиск iTunes (Колонка 4)" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+             </Border>
+        </Grid>
+    </DockPanel>
 
 </Window>
