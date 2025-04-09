@@ -109,10 +109,10 @@ public partial class MainWindowViewModel : ViewModelBase
             int count = 0;
 
             var tasks = new List<Task>();
+            var lockObject = new object();
+            
             foreach (var filePath in files)
             {
-                var lockObject = new object();
-                
                 var task = Task.Run(() =>
                 {
                     var track = LoadTrackInfo(filePath);
@@ -126,7 +126,10 @@ public partial class MainWindowViewModel : ViewModelBase
                         }
                     }
 
-                    ++CurrentTrack;
+                    lock (lockObject)
+                    {
+                        ++CurrentTrack;
+                    }
                 });
                 tasks.Add(task);
             }
