@@ -129,6 +129,7 @@ public partial class MainWindowViewModel : ViewModelBase
                     lock (lockObject)
                     {
                         ++CurrentTrack;
+                        StatusMessage = $"Сканирование папки: {CurrentTrack}/{TrackCount}";
                     }
                 });
                 tasks.Add(task);
