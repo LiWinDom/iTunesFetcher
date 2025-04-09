@@ -53,7 +53,7 @@
                                 <StackPanel Grid.Column="1" VerticalAlignment="Center"> 
                                     <TextBlock Text="{Binding Title}" TextTrimming="CharacterEllipsis"/>
                                     <TextBlock Text="{Binding Album}" FontSize="12" Opacity="0.5" TextTrimming="CharacterEllipsis"/>
-                                    <TextBlock Text="{Binding Artist}" FontSize="12" FontFamily="Segoe UI" Opacity="0.5" TextTrimming="CharacterEllipsis"/>
+                                    <TextBlock Text="{Binding Artist}" FontSize="12"  Opacity="0.5" FontStyle="Italic" TextTrimming="CharacterEllipsis"/>
                                 </StackPanel>
                             </Grid>
                         </DataTemplate>
