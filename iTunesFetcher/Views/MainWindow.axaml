@@ -27,8 +27,8 @@
         
         <DockPanel DockPanel.Dock="Bottom">
             <ProgressBar DockPanel.Dock="Right"
-                         Minimum="0" Maximum="{Binding TrackCount}"
-                         Value="{Binding CurrentTrack}"
+                         Minimum="0" Maximum="{Binding ProgressMaximum}"
+                         Value="{Binding ProgressValue}"
                          Margin="10" VerticalAlignment="Stretch"/>
             <TextBlock DockPanel.Dock="Left"
                        Text="{Binding StatusMessage}"
@@ -52,8 +52,8 @@
 
                                 <StackPanel Grid.Column="1" VerticalAlignment="Center"> 
                                     <TextBlock Text="{Binding Title}" TextTrimming="CharacterEllipsis"/>
-                                    <TextBlock Text="{Binding Album}" FontSize="12" Opacity="0.5" TextTrimming="CharacterEllipsis"/>
-                                    <TextBlock Text="{Binding Artist}" FontSize="12"  Opacity="0.5" FontStyle="Italic" TextTrimming="CharacterEllipsis"/>
+                                    <TextBlock Text="{Binding Album}" FontSize="12" TextTrimming="CharacterEllipsis"/>
+                                    <TextBlock Text="{Binding Artist}" FontSize="12" Opacity="0.6" TextTrimming="CharacterEllipsis"/>
                                 </StackPanel>
                             </Grid>
                         </DataTemplate>

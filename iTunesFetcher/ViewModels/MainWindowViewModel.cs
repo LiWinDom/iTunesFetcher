@@ -22,9 +22,9 @@ public partial class MainWindowViewModel : ViewModelBase
 
     [ObservableProperty] private string _statusMessage = "Готово";
     
-    [ObservableProperty] private int? _trackCount;
+    [ObservableProperty] private int? _progressMaximum;
     
-    [ObservableProperty] private int? _currentTrack;
+    [ObservableProperty] private int? _progressValue;
 
     [RelayCommand]
     private async Task OpenFolder()
@@ -93,56 +93,59 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private async Task LoadTracksAsync(string folderPath)
     {
-        StatusMessage = "Сканирование папки...";
-        TrackList.Clear();
-        SelectedTrack = null;
-
-        try
+        await Task.Run(async () =>
         {
-            var supportedExtensions = new[] { ".mp3", ".flac", ".m4a", ".ogg", ".wma" };
-            var files = Directory.EnumerateFiles(folderPath, "*.*", SearchOption.AllDirectories)
-                .Where(f => supportedExtensions.Contains(Path.GetExtension(f).ToLowerInvariant()));
+            StatusMessage = "Сканирование папки...";
+            TrackList.Clear();
+            SelectedTrack = null;
 
-            TrackCount = files.Count();
-            CurrentTrack = 0;
-
-            int count = 0;
-
-            var tasks = new List<Task>();
-            var lockObject = new object();
-            
-            foreach (var filePath in files)
+            try
             {
-                var task = Task.Run(() =>
-                {
-                    var track = LoadTrackInfo(filePath);
+                var supportedExtensions = new[] { ".mp3", ".flac", ".m4a", ".ogg", ".wma" };
+                var files = Directory.EnumerateFiles(folderPath, "*.*", SearchOption.AllDirectories)
+                    .Where(f => supportedExtensions.Contains(Path.GetExtension(f).ToLowerInvariant()));
 
-                    if (track != null)
+                ProgressMaximum = files.Count();
+                ProgressValue = 0;
+
+                int count = 0;
+
+                var tasks = new List<Task>();
+                var lockObject = new object();
+
+                foreach (var filePath in files)
+                {
+                    tasks.Add(Task.Run(() =>
                     {
+                        var track = LoadTrackInfo(filePath);
+
+                        if (track != null)
+                        {
+                            lock (lockObject)
+                            {
+                                TrackList.Add(track);
+                                ++count;
+                            }
+                        }
+
                         lock (lockObject)
                         {
-                            TrackList.Add(track);
-                            ++count;
+                            ++ProgressValue;
+                            StatusMessage = $"Сканирование папки: {ProgressValue}/{ProgressMaximum}";
                         }
-                    }
+                    }));
+                }
 
-                    lock (lockObject)
-                    {
-                        ++CurrentTrack;
-                        StatusMessage = $"Сканирование папки: {CurrentTrack}/{TrackCount}";
-                    }
-                });
-                tasks.Add(task);
+                await Task.WhenAll(tasks);
+                ProgressValue = 0;
+
+                StatusMessage = $"Найдено треков: {count}";
             }
-            await Task.WhenAll(tasks);
-            CurrentTrack = 0;
-
-            StatusMessage = $"Найдено треков: {count}";
-        }
-        catch (Exception ex)
-        {
-            StatusMessage = $"Ошибка сканирования: {ex.Message}";
-        }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Ошибка сканирования: {ex.Message}";
+            }
+        });
     }
 
     private TopLevel? GetTopLevel()
