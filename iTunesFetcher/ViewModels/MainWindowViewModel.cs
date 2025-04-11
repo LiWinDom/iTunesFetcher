@@ -62,7 +62,7 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             using (var tagFile = TagLib.File.Create(filePath))
             {
-                var trackModel = new Models.TrackModel
+                return new TrackViewModel(new Models.TrackModel
                 {
                     FilePath = filePath,
                     Title = tagFile.Tag.Title ?? Path.GetFileNameWithoutExtension(filePath),
@@ -71,9 +71,7 @@ public partial class MainWindowViewModel : ViewModelBase
                     TrackNumber = tagFile.Tag.Track,
                     AlbumArtData = tagFile.Tag.Pictures?.FirstOrDefault()?.Data.Data,
                     Year = tagFile.Tag.Year,
-                };
-                
-                return new TrackViewModel(trackModel);
+                });
             }
         }
         catch (CorruptFileException ex)
@@ -90,6 +88,15 @@ public partial class MainWindowViewModel : ViewModelBase
         }
         return null;
     }
+
+    [RelayCommand]
+    private void Exit()
+    {
+        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            desktop.Shutdown();
+        }
+    } 
 
     private async Task LoadTracksAsync(string folderPath)
     {

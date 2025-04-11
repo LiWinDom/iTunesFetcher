@@ -15,13 +15,20 @@
              to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainWindowViewModel/>
     </Design.DataContext>
+    
+    <Window.KeyBindings>
+        <KeyBinding Gesture="Meta+O" Command="{Binding OpenFolderCommand}"/>
+    </Window.KeyBindings>
+
 
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_Файл">
-                <MenuItem Header="_Выбрать папку..." Command="{Binding OpenFolderCommand}"/>
+                <MenuItem Header="_Выбрать папку..." Command="{Binding OpenFolderCommand}"
+                          InputGesture="Meta+O"/>
                 <Separator/>
-                <MenuItem Header="_Выход"/>
+                <MenuItem Header="_Выход" Command="{Binding ExitCommand}"
+                          InputGesture="Meta+W"/>
             </MenuItem>
         </Menu>
         
