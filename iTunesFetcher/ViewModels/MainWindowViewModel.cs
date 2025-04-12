@@ -12,6 +12,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using TagLib;
 
+using iTunesFetcher.Models;
+
 namespace iTunesFetcher.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
@@ -62,15 +64,16 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             using (var tagFile = TagLib.File.Create(filePath))
             {
-                return new TrackViewModel(new Models.TrackModel
+                return new TrackViewModel(new LocalTrackModel()
                 {
                     FilePath = filePath,
-                    Title = tagFile.Tag.Title ?? Path.GetFileNameWithoutExtension(filePath),
-                    Artist = tagFile.Tag.FirstPerformer ?? "Неизвестный артист",
-                    Album = tagFile.Tag.Album ?? "Неизвестный альбом",
-                    TrackNumber = tagFile.Tag.Track,
-                    AlbumArtData = tagFile.Tag.Pictures?.FirstOrDefault()?.Data.Data,
-                    Year = tagFile.Tag.Year,
+                    
+                    Title = tagFile.Tag.Title,
+                    Artist = tagFile.Tag.FirstPerformer,
+                    Album = tagFile.Tag.Album,
+                    Artwork = tagFile.Tag.Pictures.FirstOrDefault()?.Data.Data,
+                    
+                    Duration = 0,
                 });
             }
         }

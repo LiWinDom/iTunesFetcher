@@ -50,7 +50,7 @@
                         <DataTemplate>
                             <Grid ColumnDefinitions="Auto, *">
                                 <Image Grid.Column="0"
-                                       Source="{Binding ArtworkData}"
+                                       Source="{Binding Artwork}"
                                        VerticalAlignment="Stretch"  
                                        Stretch="Uniform"           
                                        Margin="0,0,5,0"

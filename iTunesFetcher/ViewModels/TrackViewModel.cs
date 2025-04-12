@@ -1,14 +1,13 @@
-using System;
-using System.Diagnostics;
 using System.IO;
 using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 
+using iTunesFetcher.Models;
+
 namespace iTunesFetcher.ViewModels;
 
-public partial class TrackViewModel : ObservableObject
+public partial class TrackViewModel : ViewModelBase
 {
-    public string FilePath { get; }
 
     [ObservableProperty]
     private string _title;
@@ -20,46 +19,20 @@ public partial class TrackViewModel : ObservableObject
     private string _album;
 
     [ObservableProperty]
-    private uint _trackNumber;
+    private Bitmap _artwork;
 
-    [ObservableProperty]
-    private Bitmap _artworkData;
-
-    [ObservableProperty]
-    private uint _year;
-
-    public TrackViewModel(Models.TrackModel model)
+    public TrackViewModel(LocalTrackModel model)
     {
-        FilePath = model.FilePath;
-        _title = model.Title;
-        _artist = model.Artist;
-        _album = model.Album;
-        _trackNumber = model.TrackNumber;
+        _title = model.Title ?? Path.GetFileNameWithoutExtension(model.FilePath);
+        _artist = model.Artist ?? "Неизвестный артист";
+        _album = model.Album ?? "Неизвестный альбом";
         
-        if (model.AlbumArtData != null)
+        if (model.Artwork != null)
         {
-            using (var stream = new MemoryStream(model.AlbumArtData))
+            using (var stream = new MemoryStream(model.Artwork))
             {
-                _artworkData = Bitmap.DecodeToWidth(stream, 96);
+                _artwork = Bitmap.DecodeToWidth(stream, 96);
             }
         }
-
-        _year = model.Year;
-    }
-
-    public void UpdateFromModel(Models.TrackModel model)
-    {
-        Title = model.Title;
-        Artist = model.Artist;
-        Album = model.Album;
-        TrackNumber = model.TrackNumber;
-        if (model.AlbumArtData != null)
-        {
-            using (var stream = new MemoryStream(model.AlbumArtData))
-            {
-                ArtworkData = Bitmap.DecodeToWidth(stream, 96);
-            }
-        }
-        Year = model.Year;
     }
 }
