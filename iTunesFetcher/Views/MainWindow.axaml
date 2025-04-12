@@ -6,8 +6,8 @@
         mc:Ignorable="d" d:DesignWidth="960" d:DesignHeight="540"
         x:Class="iTunesFetcher.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
-        Icon="/Assets/avalonia-logo.ico"
-        Title="iTunesFetcher"
+        Title="iTunes Fetcher"
+        Icon="avares://iTunesFetcher/Assets/icon.png"
         MinWidth="960" MinHeight="540">
 
     <Design.DataContext>
