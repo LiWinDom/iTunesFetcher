@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>CFBundleIdentifier</key>
+  <string>com.LiWinDom.iTunesFetcher</string>
+  <key>CFBundleName</key>
+  <string>iTunes Fetcher</string>
+  <key>CFBundleVersion</key>
+  <string>1.0.0</string>
+  <key>CFBundleExecutable</key>
+  <string>iTunesFetcher</string>
+  <key>CFBundlePackageType</key>
+  <string>APPL</string>
+  <key>LSMinimumSystemVersion</key>
+  <string>10.12</string>
+  <key>NSHighResolutionCapable</key>
+  <true/>
+</dict>
+</plist>

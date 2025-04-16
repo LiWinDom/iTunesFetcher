@@ -46,7 +46,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
         if (folders.Count >= 1)
         {
-            var selectedFolderPath = folders[0].Path.LocalPath;
+            var selectedFolderPath = folders[0].Path.AbsolutePath;
             if (!string.IsNullOrEmpty(selectedFolderPath))
             {
                 await LoadTracksAsync(selectedFolderPath);
@@ -62,7 +62,7 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         try
         {
-            using (var tagFile = TagLib.File.Create(filePath))
+            using (var tagFile = TagLib.File.Create(filePath, ReadStyle.PictureLazy))
             {
                 return new TrackViewModel(new LocalTrackModel()
                 {

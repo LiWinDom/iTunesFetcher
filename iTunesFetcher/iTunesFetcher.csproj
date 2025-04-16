@@ -1,12 +1,41 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <OutputType>WinExe</OutputType>
+        <OutputType>Exe</OutputType>
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+
+        <UseAppHost>true</UseAppHost>
+        <SelfContained>true</SelfContained>
+        <PublishSingleFile>true</PublishSingleFile>
+        <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
+        <PublishTrimmed>true</PublishTrimmed>
+        <PublishReadyToRun>true</PublishReadyToRun>
+        
+        <Company>com.LiWinDom</Company>
+        <Product>iTunes Fetcher</Product>
+        <NeutralLanguage>en</NeutralLanguage>
+        <AssemblyVersion>1.0.0</AssemblyVersion>
+        <FileVersion>1.0.0.1</FileVersion>
     </PropertyGroup>
+
+    <PropertyGroup Condition="'$(RuntimeIdentifier)' == 'osx-x64' or '$(RuntimeIdentifier)' == 'osx-arm64'">
+        <PublishSingleFile>false</PublishSingleFile>
+        <PublishDir>bin/$(Configuration)/$(TargetFramework)/$(RuntimeIdentifier)/publish/$(MSBuildProjectName).app/Contents/MacOS</PublishDir>
+    </PropertyGroup>
+
+    <ItemGroup Condition="'$(RuntimeIdentifier)' == 'osx-x64' or '$(RuntimeIdentifier)' == 'osx-arm64'">
+        <None Include="Assets/Info.plist">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <TargetPath>Info.plist</TargetPath>
+        </None>
+        <None Include="Assets/*.icns">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <TargetPath>../Resources/%(Filename)%(Extension)</TargetPath>
+        </None>
+    </ItemGroup>
 
     <ItemGroup>
         <AvaloniaResource Include="Assets\**"/>
@@ -24,5 +53,11 @@
         </PackageReference>
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1"/>
         <PackageReference Include="TagLibSharp" Version="2.3.0" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <TrimmerRootAssembly Include="TagLibSharp" />
+        <TrimmerRootAssembly Include="System.Runtime" />
+        <TrimmerRootAssembly Include="System.Runtime.InteropServices" />
     </ItemGroup>
 </Project>
