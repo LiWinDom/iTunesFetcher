@@ -68,17 +68,17 @@
                  </ListBox>
             </Border>
             
-             <Border Grid.Column="1" BorderBrush="Gray" BorderThickness="0, 0, 1, 0" Padding="5">
-                 <TextBlock Text="Текущая информация (Колонка 2)" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-             </Border>
+            <Border Grid.Column="1" BorderBrush="Gray" BorderThickness="0, 0, 1, 0" Padding="5">
+                <TextBlock Text="Текущая информация (Колонка 2)" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            </Border>
             
-             <Border Grid.Column="2" BorderBrush="Gray" BorderThickness="0, 0, 1, 0" Padding="5">
-                 <TextBlock Text="Редактирование (Колонка 3)" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-             </Border>
+            <Border Grid.Column="2" BorderBrush="Gray" BorderThickness="0, 0, 1, 0" Padding="5">
+                <TextBlock Text="Редактирование (Колонка 3)" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            </Border>
             
-             <Border Grid.Column="3" Padding="5">
-                 <TextBlock Text="Поиск iTunes (Колонка 4)" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-             </Border>
+            <Border Grid.Column="3" Padding="5">
+                <TextBlock Text="Поиск iTunes (Колонка 4)" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            </Border>
         </Grid>
     </DockPanel>
 

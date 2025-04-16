@@ -19,7 +19,7 @@ public partial class TrackViewModel : ViewModelBase
     private string _album;
 
     [ObservableProperty]
-    private Bitmap _artwork;
+    private Bitmap? _artwork;
 
     public TrackViewModel(LocalTrackModel model)
     {
