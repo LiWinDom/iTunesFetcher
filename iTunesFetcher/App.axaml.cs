@@ -1,15 +1,14 @@
+using System;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Data.Core;
 using Avalonia.Data.Core.Plugins;
 using System.Linq;
 using Avalonia.Markup.Xaml;
 using iTunesFetcher.ViewModels;
 using iTunesFetcher.Views;
-
 namespace iTunesFetcher;
 
-public partial class App : Application
+public class App : Application
 {
     public override void Initialize()
     {
@@ -23,6 +22,10 @@ public partial class App : Application
             // Avoid duplicate validations from both Avalonia and the CommunityToolkit. 
             // More info: https://docs.avaloniaui.net/docs/guides/development-guides/data-validation#manage-validationplugins
             DisableAvaloniaDataAnnotationValidation();
+            
+            // Set random accent color for fun
+            SetRandomAccentColor();
+            
             desktop.MainWindow = new MainWindow
             {
                 DataContext = new MainWindowViewModel(),
@@ -42,6 +45,17 @@ public partial class App : Application
         foreach (var plugin in dataValidationPluginsToRemove)
         {
             BindingPlugins.DataValidators.Remove(plugin);
+        }
+    }
+
+    private static void SetRandomAccentColor()
+    {
+        if (Current?.Resources != null)
+        {
+            var random = new Random();
+            var index = random.Next(Convert.ToInt32(Current.Resources["AccentColorsNumber"])) + 1;
+            
+            Current.Resources["SystemAccentColor"] = Current.Resources[$"AccentColor{index}"];
         }
     }
 }
