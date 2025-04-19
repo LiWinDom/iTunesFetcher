@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,10 +17,8 @@ namespace iTunesFetcher.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
-    public ObservableCollection<TrackViewModel> TrackList { get; } = new();
-
-    [ObservableProperty] private TrackViewModel? _selectedTrack;
-
+    [ObservableProperty] private LocalTrackListViewModel _localTrackListViewModel = new();
+    
     [ObservableProperty] private string _statusMessage = "Готово";
     
     [ObservableProperty] private int? _progressMaximum;
@@ -106,8 +103,8 @@ public partial class MainWindowViewModel : ViewModelBase
         await Task.Run(async () =>
         {
             StatusMessage = "Сканирование папки...";
-            TrackList.Clear();
-            SelectedTrack = null;
+            LocalTrackListViewModel.TrackList.Clear();
+            LocalTrackListViewModel.SelectedTrack = null;
 
             try
             {
@@ -133,7 +130,7 @@ public partial class MainWindowViewModel : ViewModelBase
                         {
                             lock (lockObject)
                             {
-                                TrackList.Add(track);
+                                LocalTrackListViewModel.TrackList.Add(track);
                                 ++count;
                             }
                         }
