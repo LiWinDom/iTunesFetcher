@@ -44,7 +44,9 @@ public partial class MainWindowViewModel : ViewModelBase
             LocalTrackListViewModel.TrackList.Clear();
             
             StatusService.StatusText = "Сканирование папки...";
+            StatusService.ProgressBarValue = 0;
             var files = FileService.ScanFolder(folderPath);
+            StatusService.ProgressBarMaximum = files.Count;
             
             List<Task> tasks = new();
             var lockObject = new object();
@@ -63,13 +65,14 @@ public partial class MainWindowViewModel : ViewModelBase
                             _trackPaths.Add(file);
                             LocalTrackListViewModel.TrackList.Add(viewModel);
                         }
-                        StatusService.StatusText = $"Просканировано файлов: {++count}/{files.Count}";
                     }
+                    StatusService.StatusText = $"Просканировано файлов: {++count}/{files.Count}";
+                    StatusService.ProgressBarValue = count;
                 }));
             }
             await Task.WhenAll(tasks);
-
             StatusService.StatusText = $"Добавлено {LocalTrackListViewModel.TrackList.Count} треков";
+            StatusService.ProgressBarValue = 0;
         });
     }
     
