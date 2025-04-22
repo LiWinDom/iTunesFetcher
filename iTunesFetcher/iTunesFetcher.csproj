@@ -52,6 +52,7 @@
             <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
         </PackageReference>
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+        <PackageReference Include="Microsoft.NET.ILLink.Tasks" Version="9.0.4" />
         <PackageReference Include="TagLibSharp" Version="2.3.0" />
     </ItemGroup>
     

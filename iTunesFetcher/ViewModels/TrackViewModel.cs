@@ -21,15 +21,20 @@ public partial class TrackViewModel : ViewModelBase
     [ObservableProperty]
     private Bitmap? _artwork;
 
-    public TrackViewModel(LocalTrackModel model)
+    public TrackViewModel(TrackModelBase track)
     {
-        _title = model.Title ?? Path.GetFileNameWithoutExtension(model.FilePath);
-        _artist = model.Artist ?? "Неизвестный артист";
-        _album = model.Album ?? "Неизвестный альбом";
-        
-        if (model.Artwork != null)
+        if (track is LocalTrackModel)
         {
-            using (var stream = new MemoryStream(model.Artwork))
+            track.Title ??= Path.GetFileNameWithoutExtension(((LocalTrackModel)track).FilePath);
+        }
+        _title = track.Title ?? "Неизвестное название";
+        _artist = track.Artist ?? "Неизвестный артист";
+        _album = track.Album ?? "Неизвестный альбом";
+        
+        if (track.Artwork != null)
+        {
+            var stream = new MemoryStream(track.Artwork);
+            using (stream)
             {
                 _artwork = Bitmap.DecodeToWidth(stream, 96);
             }

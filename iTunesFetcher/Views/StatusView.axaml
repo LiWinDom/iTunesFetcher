@@ -5,15 +5,15 @@
              xmlns:vm="clr-namespace:iTunesFetcher.ViewModels"
              mc:Ignorable="d" d:DesignWidth="960" d:DesignHeight="540"
              x:Class="iTunesFetcher.Views.StatusView"
-             x:DataType="vm:MainWindowViewModel">
+             x:DataType="vm:StatusViewModel">
      
     <DockPanel>
         <ProgressBar DockPanel.Dock="Right"
-                     Minimum="0" Maximum="{Binding ProgressMaximum}"
-                     Value="{Binding ProgressValue}"
+                     Minimum="0" Maximum="{Binding ProgressBarMaximum}"
+                     Value="{Binding ProgressBarValue}"
                      Margin="10" VerticalAlignment="Stretch"/>
         <TextBlock DockPanel.Dock="Left"
-                   Text="{Binding StatusMessage}"
+                   Text="{Binding StatusText}"
                    Margin="10, 5, 10, 10" FontSize="12"/>
     </DockPanel>
 </UserControl>

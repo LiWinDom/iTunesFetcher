@@ -1,3 +1,4 @@
+using System;
 using System.Text.Json.Serialization;
 
 namespace iTunesFetcher.Models;
@@ -17,7 +18,7 @@ public abstract class TrackModelBase
     public string? Genre { get; set; }
     
     [JsonPropertyName("releaseDate")]
-    public string? ReleaseDate { get; set; }
+    public uint? ReleaseYear { get; set; }
     
     [JsonPropertyName("trackTimeMillis")]
     public required uint Duration { get; set; }

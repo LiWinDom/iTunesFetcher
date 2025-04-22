@@ -1,38 +1,89 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.Collections.Generic;
+using CommunityToolkit.Mvvm.ComponentModel;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Platform.Storage;
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using TagLib;
-
 using iTunesFetcher.Models;
+using iTunesFetcher.Services;
 
 namespace iTunesFetcher.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
+    public MainWindowViewModel()
+    {
+        StatusService.StatusTextChanged += (_, text) => StatusViewModel.StatusText = text;
+        StatusService.ProgressBarValueChanged += (_, value) => StatusViewModel.ProgressBarValue = value;
+        StatusService.ProgressBarMaximumChanged += (_, max) => StatusViewModel.ProgressBarMaximum = max;
+        
+        MenuBarViewModel.OpenFolderRequested += async (_, _) => await OpenFolder();
+        MenuBarViewModel.ExitRequested += (_, _) => Exit();
+    }
+    
+    [ObservableProperty] private MenuBarViewModel _menuBarViewModel = new();
+    [ObservableProperty] private StatusViewModel _statusViewModel = new();
     [ObservableProperty] private LocalTrackListViewModel _localTrackListViewModel = new();
     
-    [ObservableProperty] private string _statusMessage = "Готово";
-    
-    [ObservableProperty] private int? _progressMaximum;
-    
-    [ObservableProperty] private int? _progressValue;
+    private List<string> _trackPaths = new();
 
     [RelayCommand]
     private async Task OpenFolder()
     {
-        var topLevel = GetTopLevel();
+        var folderPath = await RequestFolder();
+        if (folderPath == null)
+        {
+            return;
+        }
+
+        await Task.Run(async () =>
+        {
+            _trackPaths.Clear();
+            LocalTrackListViewModel.TrackList.Clear();
+            
+            StatusService.StatusText = "Сканирование папки...";
+            var files = FileService.ScanFolder(folderPath);
+            
+            List<Task> tasks = new();
+            var lockObject = new object();
+            
+            int count = 0;
+            foreach (var file in files)
+            {
+                tasks.Add(Task.Run(() =>
+                {
+                    var track = TrackService.LoadTrackInfo(file);
+                    if (track != null)
+                    {
+                        var viewModel = new TrackViewModel(track);
+                        lock (lockObject)
+                        {
+                            _trackPaths.Add(file);
+                            LocalTrackListViewModel.TrackList.Add(viewModel);
+                        }
+                        StatusService.StatusText = $"Просканировано файлов: {++count}/{files.Count}";
+                    }
+                }));
+            }
+            await Task.WhenAll(tasks);
+
+            StatusService.StatusText = $"Добавлено {LocalTrackListViewModel.TrackList.Count} треков";
+        });
+    }
+    
+    private async Task<string?> RequestFolder()
+    {
+        TopLevel topLevel = null;
+        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            topLevel = desktop.MainWindow;
+        }
         if (topLevel == null)
         {
-            StatusMessage = "Не удалось получить доступ к окну";
-            return;
+            StatusService.StatusText = "Не удалось получить доступ к окну";
+            return null;
         }
 
         var folders = await topLevel.StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
@@ -41,55 +92,21 @@ public partial class MainWindowViewModel : ViewModelBase
             AllowMultiple = false,
         });
 
-        if (folders.Count >= 1)
+        if (folders.Count == 0)
         {
-            var selectedFolderPath = folders[0].Path.AbsolutePath;
-            if (!string.IsNullOrEmpty(selectedFolderPath))
-            {
-                await LoadTracksAsync(selectedFolderPath);
-            }
-            else
-            {
-                StatusMessage = "Не удалось получить путь к папке";
-            }
+            return null;
         }
+        
+        var selectedFolderPath = folders[0].Path.AbsolutePath;
+        if (string.IsNullOrEmpty(selectedFolderPath))
+        {
+            StatusService.StatusText = "Не удалось получить путь к папке";
+            return null;
+        }
+        
+        return selectedFolderPath;
     }
-
-    private static TrackViewModel? LoadTrackInfo(string filePath)
-    {
-        try
-        {
-            using (var tagFile = TagLib.File.Create(filePath, ReadStyle.PictureLazy))
-            {
-                return new TrackViewModel(new LocalTrackModel()
-                {
-                    FilePath = filePath,
-                    
-                    Title = tagFile.Tag.Title,
-                    Artist = tagFile.Tag.FirstPerformer,
-                    Album = tagFile.Tag.Album,
-                    Artwork = tagFile.Tag.Pictures.FirstOrDefault()?.Data.Data,
-                    
-                    Duration = 0,
-                });
-            }
-        }
-        catch (CorruptFileException ex)
-        {
-            System.Diagnostics.Debug.WriteLine($"Ошибка чтения файла (поврежден): {filePath} - {ex.Message}");
-        }
-        catch (UnsupportedFormatException ex)
-        {
-            System.Diagnostics.Debug.WriteLine($"Ошибка чтения файла (формат): {filePath} - {ex.Message}");
-        }
-        catch (Exception ex)
-        {
-            System.Diagnostics.Debug.WriteLine($"Общая ошибка чтения файла: {filePath} - {ex.Message}");
-        }
-        return null;
-    }
-
-    [RelayCommand]
+    
     private void Exit()
     {
         if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
@@ -97,71 +114,4 @@ public partial class MainWindowViewModel : ViewModelBase
             desktop.Shutdown();
         }
     } 
-
-    private async Task LoadTracksAsync(string folderPath)
-    {
-        await Task.Run(async () =>
-        {
-            StatusMessage = "Сканирование папки...";
-            LocalTrackListViewModel.TrackList.Clear();
-            LocalTrackListViewModel.SelectedTrack = null;
-
-            try
-            {
-                var supportedExtensions = new[] { ".mp3", ".flac", ".m4a", ".ogg", ".wma" };
-                var files = Directory.EnumerateFiles(folderPath, "*.*", SearchOption.AllDirectories)
-                    .Where(f => supportedExtensions.Contains(Path.GetExtension(f).ToLowerInvariant()));
-
-                ProgressMaximum = files.Count();
-                ProgressValue = 0;
-
-                int count = 0;
-
-                var tasks = new List<Task>();
-                var lockObject = new object();
-
-                foreach (var filePath in files)
-                {
-                    tasks.Add(Task.Run(() =>
-                    {
-                        var track = LoadTrackInfo(filePath);
-
-                        if (track != null)
-                        {
-                            lock (lockObject)
-                            {
-                                LocalTrackListViewModel.TrackList.Add(track);
-                                ++count;
-                            }
-                        }
-
-                        lock (lockObject)
-                        {
-                            ++ProgressValue;
-                            StatusMessage = $"Сканирование папки: {ProgressValue}/{ProgressMaximum}";
-                        }
-                    }));
-                }
-
-                await Task.WhenAll(tasks);
-                ProgressValue = 0;
-
-                StatusMessage = $"Найдено треков: {count}";
-            }
-            catch (Exception ex)
-            {
-                StatusMessage = $"Ошибка сканирования: {ex.Message}";
-            }
-        });
-    }
-
-    private TopLevel? GetTopLevel()
-    {
-        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-        {
-            return desktop.MainWindow;
-        }
-
-        return null;
-    }
 }
