@@ -5,7 +5,26 @@
              xmlns:vm="clr-namespace:iTunesFetcher.ViewModels"
              mc:Ignorable="d" d:DesignWidth="960" d:DesignHeight="540"
              x:Class="iTunesFetcher.Views.TrackInfoView"
-             x:DataType="vm:MainWindowViewModel">
+             x:DataType="vm:TrackInfoViewModel">
              
-    <TextBlock Text="Текущая информация (Колонка 2)" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+    <ScrollViewer>
+        <StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Путь к файлу: " VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding FilePath}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Название: " VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding Title}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Альбом: " VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding Album}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Артист: " VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding Artist}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
 </UserControl>

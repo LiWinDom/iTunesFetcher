@@ -6,22 +6,15 @@ using iTunesFetcher.Models;
 
 namespace iTunesFetcher.ViewModels;
 
-public partial class TrackViewModel : ViewModelBase
+public partial class TrackItemViewModel : ViewModelBase
 {
 
-    [ObservableProperty]
-    private string _title;
+    [ObservableProperty] private string _title;
+    [ObservableProperty] private string _artist;
+    [ObservableProperty] private string _album;
+    [ObservableProperty] private Bitmap? _artwork;
 
-    [ObservableProperty]
-    private string _artist;
-
-    [ObservableProperty]
-    private string _album;
-
-    [ObservableProperty]
-    private Bitmap? _artwork;
-
-    public TrackViewModel(TrackModelBase track)
+    public TrackItemViewModel(TrackModelBase track)
     {
         if (track is LocalTrackModel)
         {

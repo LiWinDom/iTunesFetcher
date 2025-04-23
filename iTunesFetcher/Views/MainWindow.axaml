@@ -32,7 +32,7 @@
             </Border>
 
             <Border Grid.Column="1" BorderBrush="Gray" BorderThickness="0, 0, 1, 0" Padding="5">
-                <views:TrackInfoView/>
+                <views:TrackInfoView DataContext="{Binding TrackInfoViewModel}"/>
             </Border>
             
             <Border Grid.Column="2" BorderBrush="Gray" BorderThickness="0, 0, 1, 0" Padding="5">

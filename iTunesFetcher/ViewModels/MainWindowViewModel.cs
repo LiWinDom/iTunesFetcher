@@ -21,11 +21,14 @@ public partial class MainWindowViewModel : ViewModelBase
         
         MenuBarViewModel.OpenFolderRequested += async (_, _) => await OpenFolder();
         MenuBarViewModel.ExitRequested += (_, _) => Exit();
+
+        LocalTrackListViewModel.OnSelectionChanged += (_, _) => SelectionChanged();
     }
     
     [ObservableProperty] private MenuBarViewModel _menuBarViewModel = new();
     [ObservableProperty] private StatusViewModel _statusViewModel = new();
     [ObservableProperty] private LocalTrackListViewModel _localTrackListViewModel = new();
+    [ObservableProperty] private TrackInfoViewModel _trackInfoViewModel;
     
     private List<string> _trackPaths = new();
 
@@ -59,7 +62,7 @@ public partial class MainWindowViewModel : ViewModelBase
                     var track = TrackService.LoadTrackInfo(file);
                     if (track != null)
                     {
-                        var viewModel = new TrackViewModel(track);
+                        var viewModel = new TrackItemViewModel(track);
                         lock (lockObject)
                         {
                             _trackPaths.Add(file);
@@ -116,5 +119,22 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             desktop.Shutdown();
         }
-    } 
+    }
+
+    private async Task SelectionChanged()
+    {
+        if (LocalTrackListViewModel.SelectedIndex == null)
+        {
+            return;
+        }
+
+        await Task.Run(() =>
+        {
+            var track = TrackService.LoadTrackInfo(_trackPaths[(int)LocalTrackListViewModel.SelectedIndex]);
+            if (track != null)
+            {
+                TrackInfoViewModel = new TrackInfoViewModel((LocalTrackModel)track);
+            }
+        });
+    }
 }
