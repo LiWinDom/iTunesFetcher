@@ -41,7 +41,7 @@ public partial class TrackInfoViewModel : ViewModelBase
             var stream = new MemoryStream(track.Artwork);
             using (stream)
             {
-                _artwork = Bitmap.DecodeToWidth(stream, 3000);
+                _artwork = Bitmap.DecodeToWidth(stream, 1280);
             }
         }
         
