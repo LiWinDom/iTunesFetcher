@@ -26,22 +26,16 @@
         <views:MenuBarView DockPanel.Dock="Top" DataContext="{Binding MenuBarViewModel}"/>
         <views:StatusView DockPanel.Dock="Bottom" DataContext="{Binding StatusViewModel}"/>
 
-        <Grid Margin="5" ColumnDefinitions="2*, 3*, 3*, 2*">
-            <Border Grid.Column="0" BorderBrush="Gray" BorderThickness="0, 0, 1, 0" Padding="5">
-                <views:LocalTrackListView DataContext="{Binding LocalTrackListViewModel}"/>
-            </Border>
-
-            <Border Grid.Column="1" BorderBrush="Gray" BorderThickness="0, 0, 1, 0" Padding="5">
-                <views:TrackInfoView DataContext="{Binding TrackInfoViewModel}"/>
-            </Border>
+        <Grid ColumnDefinitions="2*, 10, 3*, 10, 3*, 10, 2*" Margin="10, 0">
+            <views:LocalTrackListView Grid.Column="0"
+                                      DataContext="{Binding LocalTrackListViewModel}"/>
             
-            <Border Grid.Column="2" BorderBrush="Gray" BorderThickness="0, 0, 1, 0" Padding="5">
-                <views:TrackEditView/>
-            </Border>
+            <views:TrackInfoView Grid.Column="2" 
+                                 DataContext="{Binding TrackInfoViewModel}"/>
             
-            <Border Grid.Column="3" Padding="5">
-                <views:ItunesTrackListView/>
-            </Border>
+            <views:TrackEditView Grid.Column="4"/>
+            
+            <views:ItunesTrackListView Grid.Column="6"/>
         </Grid>
     </DockPanel>
 
