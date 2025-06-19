@@ -6,26 +6,37 @@
              mc:Ignorable="d" d:DesignWidth="960" d:DesignHeight="540"
              x:Class="iTunesFetcher.Views.LocalTrackListView"
              x:DataType="vm:LocalTrackListViewModel">
-             
+
     <ListBox ItemsSource="{Binding TrackList}"
              SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}"
              CornerRadius="10">
+        <ListBox.Styles>
+            <Style Selector="ListBoxItem">
+                <Setter Property="Height" Value="68"/>
+                <Setter Property="Padding" Value="10"/>
+            </Style>
+        </ListBox.Styles>
         <ListBox.ItemTemplate>
             <DataTemplate>
-                <Grid ColumnDefinitions="Auto, 5, *">
-                    <Image Grid.Column="0"
-                           Source="{Binding Artwork}"
-                           VerticalAlignment="Center"  
-                           Stretch="Uniform"
-                           MaxWidth="48">
-                    </Image>
+                <Grid ColumnDefinitions="Auto, 5, *" Height="68">
+                    <Grid RowDefinitions="*, Auto, *">
+                        <Border Grid.Row="1" CornerRadius="5" ClipToBounds="True">
+                            <Image Source="{Binding Artwork}"
+                                VerticalAlignment="Center"
+                                Stretch="Uniform"
+                                MaxWidth="48" MaxHeight="48"/>
+                        </Border>
+                    </Grid>
 
-                    <StackPanel Grid.Column="2"
-                                VerticalAlignment="Center"> 
-                        <TextBlock Text="{Binding Title}" TextTrimming="CharacterEllipsis"/>
-                        <TextBlock Text="{Binding Album}" FontSize="12" TextTrimming="CharacterEllipsis"/>
-                        <TextBlock Text="{Binding Artist}" FontSize="12" Opacity="0.6" TextTrimming="CharacterEllipsis"/>
-                    </StackPanel>
+                    <Grid Grid.Column="2" RowDefinitions="*, Auto, Auto, Auto, *"
+                          Height="68"> 
+                        <TextBlock Grid.Row="1" Text="{Binding Title}"
+                                   TextTrimming="CharacterEllipsis"/>
+                        <TextBlock Grid.Row="2" Text="{Binding Album}"
+                                   FontSize="12" TextTrimming="CharacterEllipsis"/>
+                        <TextBlock Grid.Row="3" Text="{Binding Artist}"
+                                   FontSize="12" Opacity="0.6" TextTrimming="CharacterEllipsis"/>
+                    </Grid>
                 </Grid>
             </DataTemplate>
         </ListBox.ItemTemplate>

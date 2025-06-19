@@ -29,7 +29,7 @@ public partial class TrackItemViewModel : ViewModelBase
             var stream = new MemoryStream(track.Artwork);
             using (stream)
             {
-                _artwork = Bitmap.DecodeToWidth(stream, 96);
+                _artwork = Bitmap.DecodeToWidth(stream, 48 * 2); // Retina scaling?? idk
             }
         }
     }

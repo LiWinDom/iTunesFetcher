@@ -11,12 +11,6 @@
   
     <Application.Styles>
         <FluentTheme />
-        
-        <Style Selector="ListBoxItem">
-            <Setter Property="MinHeight" Value="68"/>
-            <Setter Property="Padding" Value="10"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-        </Style>
     </Application.Styles>
     
     <Application.Resources>
