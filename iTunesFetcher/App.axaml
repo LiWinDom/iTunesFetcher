@@ -11,6 +11,10 @@
   
     <Application.Styles>
         <FluentTheme />
+        
+        <Style Selector="Window">
+            <Setter Property="FontFamily" Value="Default"/>
+        </Style>
     </Application.Styles>
     
     <Application.Resources>
