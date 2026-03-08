@@ -2,29 +2,78 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:vm="clr-namespace:iTunesFetcher.ViewModels"
+             xmlns:vm="using:iTunesFetcher.ViewModels"
              mc:Ignorable="d" d:DesignWidth="273" d:DesignHeight="476"
              x:Class="iTunesFetcher.Views.TrackInfoView"
              x:DataType="vm:TrackInfoViewModel">
+    
+    <Design.DataContext>
+        <vm:TrackInfoDesignViewModel/>
+    </Design.DataContext>
              
     <ScrollViewer>
-        <StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Путь к файлу: " VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                <TextBlock Text="{Binding FilePath}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <Grid RowDefinitions="Auto, 10, Auto, 10, Auto, 10, Auto">
+            <Border Grid.Row="0"
+                    CornerRadius="10"
+                    ClipToBounds="True">
+                <Image Source="{Binding Artwork}"
+                       VerticalAlignment="Center"
+                       Stretch="Uniform"/>
+            </Border>
+
+            <StackPanel Grid.Row="2"
+                        HorizontalAlignment="Center">
+                <TextBlock Text="{Binding Title}"
+                           HorizontalAlignment="Center"
+                           FontSize="20"
+                           TextTrimming="CharacterEllipsis"/>
+                <TextBlock Text="{Binding Album}"
+                           HorizontalAlignment="Center"
+                           FontSize="16"
+                           TextTrimming="CharacterEllipsis"/>
+                <TextBlock Text="{Binding Artist}"
+                           HorizontalAlignment="Center"
+                           FontSize="16"
+                           Opacity="0.6"
+                           FontStyle="Italic"
+                           TextTrimming="CharacterEllipsis"/>
             </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Название: " VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                <TextBlock Text="{Binding Title}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            
+            <StackPanel Grid.Row="4">
+                <Grid ColumnDefinitions="Auto, 10, Auto">
+                    <StackPanel Grid.Column="0"
+                                Opacity="0.6">
+                        <TextBlock Text="Жанр"/>
+                        <TextBlock Text="Год выхода"/>
+                        <TextBlock Text="Длительность"/>
+                        <TextBlock Text="Номер трека"/>
+                        <TextBlock Text="Номер диска"/>
+                        <TextBlock Text="Путь к файлу"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="{Binding Genre}"/>
+                        <TextBlock Text="{Binding ReleaseYear}"/>
+                        <TextBlock Text="{Binding Duration}"/>
+                        <TextBlock>
+                            <Run Text="{Binding TrackNumber}"/>
+                            <Run Text="/"/>
+                            <Run Text="{Binding TrackCount}"/>
+                        </TextBlock>
+                        <TextBlock>
+                            <Run Text="{Binding DiskNumber}"/>
+                            <Run Text="/"/>
+                            <Run Text="{Binding DiskCount}"/>
+                        </TextBlock>
+                        <TextBlock Text="{Binding FilePath}"
+                                   ToolTip.Tip="{Binding FilePath}"/>
+                    </StackPanel>
+                </Grid>
             </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Альбом: " VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                <TextBlock Text="{Binding Album}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Артист: " VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                <TextBlock Text="{Binding Artist}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-            </StackPanel>
-        </StackPanel>
+            
+            <TextBlock Grid.Row="6"
+                       Text="{Binding Lyrics}" VerticalAlignment="Center"
+                       TextWrapping="Wrap"
+                       HorizontalAlignment="Left"/>
+        </Grid>
     </ScrollViewer>
 </UserControl>
