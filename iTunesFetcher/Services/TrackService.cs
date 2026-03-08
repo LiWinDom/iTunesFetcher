@@ -1,5 +1,7 @@
 using System;
+using System.IO;
 using System.Linq;
+using Avalonia.Platform;
 using iTunesFetcher.Models;
 
 namespace iTunesFetcher.Services;
@@ -28,7 +30,7 @@ public static class TrackService
                     DiscNumber = tagFile.Tag.Disc,
                     TrackCount = tagFile.Tag.TrackCount,
                     DiscCount = tagFile.Tag.DiscCount,
-                    Artwork = tagFile.Tag.Pictures.FirstOrDefault()?.Data.Data,
+                    Artwork = GetArtworkOrDefault(tagFile),
                     Lyrics = tagFile.Tag.Lyrics,
                 };
             }
@@ -46,5 +48,20 @@ public static class TrackService
             System.Diagnostics.Debug.WriteLine($"Общая ошибка чтения файла: {filePath} - {ex.Message}");
         }
         return null;
+    }
+
+    private static byte[]? GetArtworkOrDefault(TagLib.File tagFile)
+    {
+        var embeddedArtwork = tagFile.Tag.Pictures.FirstOrDefault()?.Data.Data;
+        if (embeddedArtwork?.Length > 0)
+        {
+            return embeddedArtwork;
+        }
+
+        // Loading default artwork
+        using var stream = AssetLoader.Open(new Uri("avares://iTunesFetcher/Assets/DefaultArtwork.png"));
+        using var memoryStream = new MemoryStream();
+        stream.CopyTo(memoryStream);
+        return memoryStream.ToArray();
     }
 }
