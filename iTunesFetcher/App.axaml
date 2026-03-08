@@ -8,15 +8,15 @@
     <Application.DataTemplates>
         <local:ViewLocator/>
     </Application.DataTemplates>
-  
+             
     <Application.Styles>
         <FluentTheme />
-        
+
         <Style Selector="Window">
             <Setter Property="FontFamily" Value="Default"/>
         </Style>
     </Application.Styles>
-    
+
     <Application.Resources>
         <ResourceDictionary>
             <x:Decimal x:Key="AccentColorsNumber">3</x:Decimal>

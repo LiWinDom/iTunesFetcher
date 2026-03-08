@@ -5,7 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace iTunesFetcher.ViewModels;
 
-public partial class LocalTrackListViewModel : ViewModelBase
+public class LocalTrackListViewModel : ViewModelBase
 {
     public event EventHandler? OnSelectionChanged;
     
